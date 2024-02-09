@@ -50,10 +50,15 @@ class TaskDetail(LoginRequiredMixin, DetailView):  # namayesh details har object
 
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
-    fields = '__all__'  # hame attribute hay class model ro mikhone
+    fields = ['title', 'description', 'complete']  # hame attribute hay class model ro mikhone
     success_url = reverse_lazy('tasks')
     # in reverse_laze dar asl miyad mige ke bad az ine ke form submit shod bere koja ke ma behesh goftim boro to urli ba name = 'task'
 
+    def form_valid(self, form):  # dar asl in fumction miyad va har dade vorodi ro be ye karbar ekhtesas mide age form valid bashe
+        form.instance.user = self.request.user  # mige user form ro barabar user login shode gharar bede
+        return super(TaskCreate, self).form_valid(form)
+    # ta zamani ke ino tarif nakoni hatman bayad user ro ham aval har form vared koni va age mikhay intor nabashe bayad begi ke har form marbot be kodom usere 
+    # va in kar ba in function anjam mishe. age nabashe rasamn ta user to taeen nakoni invalid mahsob mishe.
 
 class TaskUpdate(LoginRequiredMixin, UpdateView):
     model = Task
