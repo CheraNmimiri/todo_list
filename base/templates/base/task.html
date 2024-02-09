@@ -1,0 +1,19 @@
+{% if request.user.is_authenticated %}
+    <h4>{{request.user}}</h4>
+     <form method="Post" action="{% url "logout" %}">
+        {%csrf_token%}
+     <input type="submit" value="Logout">
+
+    </form> 
+
+{% else %}
+<h5><a href="{% url 'login' %}">Login</a></h5>
+
+{% endif %}
+<hr>
+<h4>{{request.user}}</h4>
+
+<hr>
+
+<h1> Task: {{task}}<h1>
+<h4>Context : {{task.description}} </h4>

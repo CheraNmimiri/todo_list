@@ -1,0 +1,42 @@
+{% if request.user.is_authenticated %}
+    <h4>{{request.user}}</h4>
+     <form method="Post" action="{% url "logout" %}">
+        {%csrf_token%}
+     <input type="submit" value="Logout">
+
+    </form> 
+
+{% else %}
+<h5><a href="{% url 'login' %}">Login</a></h5>
+
+{% endif %}
+<hr>
+<h1> ToDo List <h1>
+<h3><a href="{% url  'task-create' %}"> Add Task <a><h3>
+
+<table>
+<tr>
+    <th> Item </th>
+    <th></th>
+    <th></th>
+</tr>
+{% for task in tasks %}
+<tr>
+    <td>{{task}}&nbsp </td>
+    <td><a href={% url 'task' task.id%}>View</a></td>
+    
+        {% comment %} ba intory neveshtan har object ro hyperlink mikone be data hash va addadesh ham bar asas id on hast. {% endcomment %}
+        {% comment %} esm task az class base view va taeen object name miyad {% endcomment %}
+    <td><a href={% url 'task-update' task.id%}>Edit</a></td>
+{% comment %} in code dar asl intoriye ke aval be name url eshare mikone va bad beshesh migi mabna id object hat --> baray forign kay ha  {% endcomment %}
+
+    <td><a href={% url 'task-delete' task.id%}>Delete</a></td>
+
+</tr>
+
+{% empty %}
+<h3> No items in list <h3>
+{% endfor %}
+
+
+</table>
