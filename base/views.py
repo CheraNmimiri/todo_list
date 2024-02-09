@@ -34,6 +34,13 @@ class TaskList(ListView):  # kolan in class baray namayesh koli data hay har use
     context_object_name = 'tasks'
     # miyad list az object hat dorost mikone va mitoni barary jinja va for estefade koni
 
+# in function baray ine ke har user data marbot be khodesh ro fagat bbine.
+    def get_context_data(self, **kwargs):  # aval tarif mishe va in ke gharare data haye ro be sorat dict bgire
+        context = super().get_context_data(**kwargs)  # kolan ye tabe pishfarze ke karesh ine be class data ezafe kone taht onvan context
+        context['tasks'] = context['tasks'].filter(user=self.request.user.id)
+        # in ja miyad context ro limit mojone be ueerha yani fagat data hau har user ro bar asas name dar database boro begir va namayesh bede.
+        context['count'] = context['tasks'].filter(complete=False).count()
+        return context
 
 class TaskDetail(LoginRequiredMixin, DetailView):  # namayesh details har object yek user
     model = Task
@@ -61,6 +68,4 @@ class TaskDelete(LoginRequiredMixin, DeleteView):
     context_update_name = 'task'
     success_url = reverse_lazy("tasks")
     template_name = 'base/confirm_delete.html'
-    # barau anjam faryand delete niaz dari be ye template ta dar on amal delete ro anjam bedi
-
-
+    # barau anjam faryand delete niaz dari be ye template ta dar on amal delete ro anjam bede
