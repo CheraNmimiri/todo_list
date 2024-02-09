@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.urls import reverse_lazy
 
 from django.contrib.auth.views import LoginView
-
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm #baray sakht register
+from django.contrib.auth import login #baray sakht register
+
 # az in ketabkhone baray in estefade mishe ke kesi ke hanoz login nakarde natone hich bakhshi az site ro be joz baksh login bbine,
 # dar in ja ma in dastor ro baray safhe home gharar dadim va har kasi vared site she mostaghim toy login page mire
 #baray in ke be safhe login befreste bayad dar bakhsh setting ye chenin chizi benevisi: LOGIN_URL = 'login'
@@ -16,6 +18,19 @@ from .models import Task
 # app mored nazaret dorost koni va badesh har kelasi dorost kobi miyad bar asas nam hamon class barash ye tamplate dar nazar migire
 # ke fagat to bayad dorostesh koni va esmesh defaulte vali mitoni mesle paeen avazesh koni.vali khobish ine khodes dir template ro midone.
 
+# baray sakht register page
+class RegisterPage(FormView):
+    template_name = 'base/register.html'
+    form_class = UserCreationForm  # baray seda zadan module mored niaz baray form register
+    redirect_authenticated_user = True  # ejaze redirect mide ba in dastor
+    success_url = reverse_lazy('tasks')
+    
+    def form_valid(self, form):
+        user = form.save()  # miyad etelaat ro toy datebase zakhire mikone
+        if user is not None:  # age dorost bod brizesh be onvan user hal hazer
+            login(self.request, user)
+        return super(RegisterPage, self).form_valid(form)
+ 
 
 class UserLoginView(LoginView):
     template_name = 'base/login.html'
