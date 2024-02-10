@@ -61,7 +61,17 @@ class TaskList(ListView):  # kolan in class baray namayesh koli data hay har use
         context['tasks'] = context['tasks'].filter(user=self.request.user.id)
         # in ja miyad context ro limit mojone be ueerha yani fagat data hau har user ro bar asas name dar database boro begir va namayesh bede.
         context['count'] = context['tasks'].filter(complete=False).count()
+
+        # ba neveshtan in function mitomi bakhsh search dashte bashi toy page taskhat va onaro entakhab koni!
+        search_input = self.request.GET.get('search-area') or ''
+        if search_input:
+            context['tasks'] = context['tasks'].filter(title__startswith=search_input)
+            # title__icontains = search_input check mikone ke aya toy task hat on harf hast ya na vali agar fagat harf aval melake bayad az
+            # title__startswitch estefade koni!
+
+        context['search_input'] = search_input  # in tike code va edamesh dar html task_list.html baesh mishe ba refresh search hat reset nashe
         return context
+
 
 class TaskDetail(LoginRequiredMixin, DetailView):  # namayesh details har object yek user
     model = Task
