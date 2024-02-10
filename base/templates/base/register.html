@@ -1,16 +1,24 @@
+{% extends 'base/main/main.html' %} {% block content %}
+<div class="header_bar">
+<h1>REGISTER</h1>
+</div>
+<div class="all">
+
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <form action="" method="Post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Register">
+      {% csrf_token %} {{form.as_p}}
+      <input class="button" type="submit" value="Register" />
     </form>
 
-<p>Already have you an account?<a href="{% url 'register' %}">Login</a></p>
-</body>
+    <p>Already have you an account?<a href="{% url 'login' %}">Login</a></p>
+  </body>
 </html>
+</div>
+
+{% endblock content %}

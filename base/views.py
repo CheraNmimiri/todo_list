@@ -91,12 +91,16 @@ class TaskCreate(LoginRequiredMixin, CreateView):
     # ta zamani ke ino tarif nakoni hatman bayad user ro ham aval har form vared koni va age mikhay intor nabashe bayad begi ke har form marbot be kodom usere 
     # va in kar ba in function anjam mishe. age nabashe rasamn ta user to taeen nakoni invalid mahsob mishe.
 
+
 class TaskUpdate(LoginRequiredMixin, UpdateView):
     model = Task
-    fields = '__all__'
+    fields = ['title', 'description', 'complete']
     success_url = reverse_lazy('tasks')
     # baray task update niazy be tarif ye tempalte dige nist
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(TaskUpdate, self).form_valid(form)
 
 class TaskDelete(LoginRequiredMixin, DeleteView):
     model = Task

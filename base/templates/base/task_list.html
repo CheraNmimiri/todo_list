@@ -1,49 +1,57 @@
-{% if request.user.is_authenticated %}
-    <h4>{{request.user}}</h4>
+{% extends 'base/main/main.html' %}
+{% block content %}
+
+<div class="header_bar">
+    <div>
+        <h1>Hello {{request.user|title}}</h1>
+        <h3 style="margin:0">You have <i>{{count}}</i>  incomplete task{{ count|pluralize:"s" }} </h3>
+    </div>
+    {% if request.user.is_authenticated %}
      <form method="Post" action="{% url "logout" %}">
         {%csrf_token%}
-     <input type="submit" value="Logout">
-
+        <input class="button" type="submit" value="Logout">
     </form> 
-
 {% else %}
-<h5><a href="{% url 'login' %}">Login</a></h5>
+<form method="Post" action="{% url "login" %}">
+    {%csrf_token%}
+    <input class="button" type="submit" value="Login">{% endif %}
+</div>
 
-{% endif %}
-<hr>
+<div class="all">
 <h1> ToDo List <h1>
-<h3><a href="{% url  'task-create' %}"> Add Task <a><h3>
-<form method="GET">
-    <input type="text" name='search-area' value='{{search_input}}''> 
-    {% comment %} be to komak mikone baray search kardan va hamcehnin khat balee ye option dare baray reset nashodan search hat dar sorat refresh {% endcomment %}
-    <input type="submit" value="Search">
-
-</form>
 
 
-<table>
-<tr>
-    <th> Item </th>
-    <th></th>
-    <th></th>
-</tr>
-{% for task in tasks %}
-<tr>
-    <td>{{task}}&nbsp </td>
-    <td><a href={% url 'task' task.id%}>View</a></td>
-    
-        {% comment %} ba intory neveshtan har object ro hyperlink mikone be data hash va addadesh ham bar asas id on hast. {% endcomment %}
-        {% comment %} esm task az class base view va taeen object name miyad {% endcomment %}
-    <td><a href={% url 'task-update' task.id%}>Edit</a></td>
-{% comment %} in code dar asl intoriye ke aval be name url eshare mikone va bad beshesh migi mabna id object hat --> baray forign kay ha  {% endcomment %}
-
-    <td><a href={% url 'task-delete' task.id%}>Delete</a></td>
-
-</tr>
-
-{% empty %}
-<h3> No items in list <h3>
-{% endfor %}
+<div id="search-add-wrapper">
+    <form method="GET" style="margin-top: 20px; display: flex;">
+        <input type="text" name='search-area' value='{{search_input}}''> 
+        {% comment %} be to komak mikone baray search kardan va hamcehnin khat balee ye option dare baray reset nashodan search hat dar sorat refresh {% endcomment %}
+        <input class="button" type="submit" value="Search">
+    </form>
+    <a id="add-link" href="{% url 'task-create' %}">&#43;</a>
+</div>
 
 
-</table>
+<div class="task-items-wrapper">
+    {% for task in tasks %}
+    <div class="task-wrapper">
+        {% if task.complete  %}
+        <div class="task-title">
+            <div class="task-complete-icon"></div>
+            <i><s><a href="{% url 'task-update' task.id%}">{{task}}</a></s></i> 
+        </div>  
+        <a class="delete_link" href={% url 'task-delete' task.id%}>&#215;</a>
+        {% else %}
+        <div class="task-title">
+            <div class="task-incomplete-icon"></div>
+            <i><a href"{% url 'task-update' task.id%}"">{{task}}</a></i> 
+        </div>
+        <a class="delete-link" href={% url 'task-delete' task.id%}>&#215;</a>  
+        {% endif %}
+        
+</div>
+        {% empty %}
+        <h3>No items in list</h3>
+        {% endfor %}
+</div>
+
+{% endblock content %}
